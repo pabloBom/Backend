@@ -1,0 +1,33 @@
+management.endpoints:
+  web.exposure.include: loggers, health
+  loggers.enabled: true
+  health.enabled: true
+
+server:
+  port: 8080
+  
+# DB
+spring:
+  datasource:
+    url: ${DATASOURCE_AUTH_URL:jdbc:postgresql://localhost:15432/marcio}
+    username: ${DATASOURCE_AUTH_USERNAME:postgres}
+    password: ${DATASOURCE_AUTH_PASSWORD:Postgres2021!}
+  devtools:
+    add-properties: false
+  jpa:
+    hibernate:
+      ddl-auto: none        
+    properties:
+      hibernate:
+        show_sql: false
+        format_sql: true
+  main:
+    allow-bean-definition-overriding: true
+    
+project:        
+  security: #SHA-256=>senha
+    jwtSigningKey: ${JWT_SIGNING_KEY:b7e94be513e96e8c45cd23d162275e5a12ebde9100a425c4ebcdd7fa4dcd897c}
+    encoding-strength: 256
+    security-realm: Spring Boot JWT Example Realm
+  cors:
+    allow-origin: ${CORS_ALLOW_ORIGIN:*}

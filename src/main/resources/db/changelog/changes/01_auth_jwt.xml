@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd
+http://www.liquibase.org/xml/ns/pro 
+http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd">
+	<changeSet author="Pablo" id="01_auth_jwt">
+		<sql>
+			CREATE TABLE app_role (
+				id bigint NOT NULL ,
+				description varchar(255) DEFAULT NULL,
+				role_name varchar(255) DEFAULT NULL,
+				PRIMARY KEY (id)
+			);
+
+			CREATE TABLE app_user (
+				id bigint NOT NULL ,
+				first_name varchar(255) NOT NULL,
+				last_name varchar(255) NOT NULL,
+				password varchar(255) NOT NULL,
+				username varchar(255) NOT NULL,
+				PRIMARY KEY (id)
+			);
+
+			CREATE TABLE user_role (
+				user_id bigint NOT NULL,
+				role_id bigint NOT NULL,
+				CONSTRAINT FK859n2jvi8ivhui0rl0esws6o FOREIGN KEY (user_id) REFERENCES app_user(id),
+				CONSTRAINT FKa68196081fvovjhkek5m97n3y FOREIGN KEY (role_id) REFERENCES app_role (id)
+			);
+			
+
+			create table oauth_client_details (
+				client_id VARCHAR(256) PRIMARY KEY,
+				resource_ids VARCHAR(256),
+				client_secret VARCHAR(256),
+				scope VARCHAR(256),
+				authorized_grant_types VARCHAR(256),
+				web_server_redirect_uri VARCHAR(256),
+				authorities VARCHAR(256),
+				access_token_validity INTEGER,
+				refresh_token_validity INTEGER,
+				additional_information VARCHAR(4096),
+				autoapprove VARCHAR(256)
+			);
+
+			create table oauth_client_token (
+				token_id VARCHAR(255),
+				token bytea ,
+				authentication_id VARCHAR(255),
+				user_name VARCHAR(255),
+				client_id VARCHAR(255)
+			);
+
+			create table oauth_access_token (
+				token_id VARCHAR(255),
+				token bytea,
+				authentication_id VARCHAR(255),
+				user_name VARCHAR(255),
+				client_id VARCHAR(255),
+				authentication bytea,
+				refresh_token VARCHAR(255)
+			);
+
+			create table oauth_refresh_token (
+				token_id VARCHAR(255),
+				token bytea,
+				authentication bytea
+			);
+
+			create table oauth_code (
+				code VARCHAR(255),
+				authentication bytea
+			);
+		</sql>
+		<rollback>
+			DROP TABLE app_role;
+			DROP TABLE app_user;
+			DROP TABLE user_role;
+			DROP TABLE oauth_client_details;
+			DROP TABLE oauth_client_token;
+			DROP TABLE oauth_access_token;
+			DROP TABLE oauth_refresh_token;
+			DROP TABLE oauth_code;
+		</rollback>
+
+		
+	</changeSet>
+</databaseChangeLog>
